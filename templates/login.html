@@ -1,0 +1,36 @@
+&#123;% block body %&#125;
+&#123;% if session['logged_in'] %&#125;
+
+You're logged in already!
+<div class="col-md-8">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+      {% if messages %}
+
+        {% for category, message in messages %}
+
+          <div class="alert alert-{{ category }}">
+
+            {{ message }}
+
+          </div>
+
+        {% endfor %}
+
+      {% endif %}
+
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+  </div>
+&#123;% else %&#125;
+<form action="/login" method="POST">
+  <input type="username" name="username" placeholder="Username">
+<input type="password" name="password" placeholder="Password">
+<input type="submit" value="Log in">
+</form>
+&#123;% endif %&#125;
+&#123;% endblock %&#125;
+&#123;% endraw %&#125;

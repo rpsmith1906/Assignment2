@@ -38,6 +38,6 @@ class Users():
          print(Users.email)
          print(list(Users.password.values()))
          
-         if ( username in Users.email.values() ):
-            print ("Found It")
+         if ( not username in Users.email.values() ):
+            return ( False )
     
