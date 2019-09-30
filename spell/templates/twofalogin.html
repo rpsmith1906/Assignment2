@@ -1,13 +1,14 @@
 <link rel="stylesheet" href="/static/style.css" type="text/css">
 
-<form action="/login" method="POST">
+<form action="/2factor" method="POST">
     {{ form.csrf_token }}
     {{ form.name }}
     <div class="login">
         <div class="login-screen">
             <div class="app-title">
                 <h1>Spell Checker</h1> 
-                    <h2>Login</h2>
+                    <h2>Two Factor Login</h2>
+                    <h3>{{ form.current_user }}</h3>
             </div>
             <div class="col-md-8">
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -21,20 +22,6 @@
                 {% endwith %}
             </div>
             <div class="login-form">
-                <div class="control-group">
-				    <input type="text" class="login-field" value="" placeholder="username" name="username">
-                    <label class="login-field-icon fui-user" for="login-name">
-                    </label>
-                    {% if form.username.errors %}
-                        <div class="invalid-feedback">
-                            {% for error in form.username.errors %}
-                                <span>
-                                    {{ error }}
-                                </span>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
                 <div class="control-group">
 				    <input type="password" class="login-field" value="" placeholder="password" name="password">
                     <label class="login-field-icon fui-lock" for="login-pass">

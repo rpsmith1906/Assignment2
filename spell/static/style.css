@@ -7,7 +7,7 @@
     }
     body {
     font-family: Arial;
-    background-color: #3498DB;
+    background-color: rgb(38, 56, 68);
     padding: 50px;
     }
     .login {
@@ -80,5 +80,12 @@
     textarea {
         width: 95%;
         height: 250px;
+    }
+
+    .spell-buttons {
+        width: 250px;
+        margin: 0 auto;
+        display: inline;
+      
         }
 

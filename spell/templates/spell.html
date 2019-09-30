@@ -1,6 +1,8 @@
 <link rel="stylesheet" href="/static/style.css" type="text/css">
 
 <form action="/spell" method="POST">
+    {{ form.csrf_token }}
+    {{ form.name }}
     <div class="spell-checker">
         <div class="login-screen">
             <div class="app-title">
@@ -11,8 +13,10 @@
                 </textarea>
                 <label class="login-field-icon fui-lock" for="login-pass">
                 </label>
+            </div class="spell-buttons">
+                <input type="submit" name="click" value="Spell Check" class="btn btn-primary btn-large btn-block spell-buttons">
+                <input type="submit" name="click" value="Log Out" class="btn btn-primary btn-large btn-block spell-buttons">
             </div>
-            <input type="submit" value="Spell Check" class="btn btn-primary btn-large btn-block">
         </div>
     </div>
 </form>

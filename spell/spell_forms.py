@@ -20,3 +20,7 @@ class Login(FlaskForm):
 class Spell(FlaskForm):
     content = TextAreaField('TYPE or PASTE your text here, then click the SPELL CHECK button', validators=[DataRequired()])
     submit = SubmitField('Spell Check')
+
+class TwoFactor(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Login')
