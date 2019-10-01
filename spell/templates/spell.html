@@ -8,6 +8,17 @@
             <div class="app-title">
                 <h1>Spell Checker</h1> 
             </div>
+            <div class="col-md-8">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
             <div class="control-group">
                 <textarea type="textarea" name="content" id="content">
                 </textarea>
