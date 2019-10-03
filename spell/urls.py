@@ -1,11 +1,14 @@
 from flask import Flask
 from flask import Flask, request, session, abort, render_template, url_for, flash, redirect
+
 from spell import app
+from spell import bcrypt
 from spell.spell_forms import Login, Spell, TwoFactor
 from spell.userman import Users
 
 @app.route('/')
 def home():
+    
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     else:
@@ -14,25 +17,25 @@ def home():
 @app.route('/logout')
 def logout():
     session['logged_in'] = False
-    form = Login()
-    print (form)
     flash('User successfully logged out.')
     return home()
 
 @app.route('/login', methods=['GET','POST'])
 def login():
     form = Login()
-    Users.current_user = form.username.data
-    if session['logged_in'] == True :
+    
+    if session.get('logged_in') :
         return redirect(url_for('spell'))
     else:
         if form.validate_on_submit():
-            if ( form.username.data in Users.password ):
-                if (form.password.data == Users.password[form.username.data]):
-                    current_user = form.username.data
-                    form=TwoFactor
-                    form.current_user = current_user
-                    session['2factor'] = True
+            if ( form.username.data in Users.password ) :
+                try:
+                    test_pw = bcrypt.check_password_hash(Users.password[form.username.data], form.password.data)
+                except:
+                    test_pw = False
+                print (test_pw)    
+                if ( test_pw ) :
+                    session['2factor'] = form.username.data
                     return redirect(url_for('twofactor'))
                     
             flash('Check Username and/or Password!')
@@ -41,7 +44,7 @@ def login():
 @app.route('/spell', methods=['GET','POST'])
 def spell():
     form = Spell()
-    if ( session['logged_in'] == False):
+    if not session.get('logged_in') :
         return home()
     else:
         if ( "click" in request.form ):
@@ -49,14 +52,15 @@ def spell():
                 return redirect(url_for('logout'))
             else:
                 print("spell", vars(form), form.submit, request.form)
+                flash("Works", "results")
+                
     return render_template('spell.html', title="Spell Checker", form=form)
 
 @app.route('/2factor', methods=['GET', 'POST'])
 def twofactor():
     form=TwoFactor()
-    form.current_user = Users.current_user
-   
-    if ( not form.current_user ) or ( session['logged_in'] == True ):
+    print (session)
+    if (  not session.get('2factor') ):
         return home()
     else:
         #print("Here - else" + form.validate_on_submit())
@@ -65,11 +69,12 @@ def twofactor():
             print("Here")
             if ( form.password.data == app.config['2faPW'] ):
                 session['logged_in'] = True
-                flash('User ,' + Users.current_user +", successful logged in via 2FA.")
+                flash('User ,' + session['2factor'] +", successful logged in via 2FA.")
+                session['2factor'] = ""
                 return redirect(url_for('spell'))
             else:
                 Users.current_user = ""
-                flash("Login via 2FA was unsuccessful.")
+                flash("Login via Two-factor failed.")
                 return redirect(url_for('login'))
     
     return render_template('twofalogin.html', title='Two Factor Login', form=form)
