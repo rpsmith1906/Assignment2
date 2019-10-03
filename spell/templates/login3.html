@@ -13,7 +13,7 @@
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
-                           <div class="alert alert-{{ category }}">
+                           <div id=success class="alert alert-{{ category }}">
                                 {{ message }}
                             </div>
                         {% endfor %}
@@ -36,7 +36,7 @@
                     {% endif %}
                 </div>
                 <div class="control-group">
-				    <input type="password" class="login-field" value="" placeholder="password" name="password">
+				    <input id=uname type="password" class="login-field" value="" placeholder="password" name="password">
                     <label class="login-field-icon fui-lock" for="login-pass">
                     </label>
                     {% if form.password.errors %}
