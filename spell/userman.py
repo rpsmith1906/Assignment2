@@ -8,6 +8,7 @@ import os.path
 class Users():
     email = dict()
     password = {}
+    twofapassword = {}
 
     def load_users():
         print ("Here")
@@ -18,6 +19,7 @@ class Users():
                 username, password, email = line.split(':', 2)
                 Users.email[username] = email  
                 Users.password[username] = password
+                Users.twofapassword[username] = bcrypt.generate_password_hash("999-999-9999").decode('utf-8')
                 print (username,password,email)
                 print("Here")
         else:

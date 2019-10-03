@@ -33,13 +33,29 @@ def login():
                     test_pw = bcrypt.check_password_hash(Users.password[form.username.data], form.password.data)
                 except:
                     test_pw = False
-                print (test_pw)    
-                if ( test_pw ) :
-                    session['2factor'] = form.username.data
-                    return redirect(url_for('twofactor'))
-                    
-            flash('Check Username and/or Password!')
-    return render_template('login3.html', title='Login', form=form)
+            else :
+                test_pw = False
+
+            if ( form.username.data in Users.twofapassword) :
+                try:
+                    test_twofapw = bcrypt.check_password_hash(Users.twofapassword[form.username.data], form.twofapassword.data)
+                except:
+                    test_twofapw = False
+            else :
+                test_twofapw = False
+            
+            if ( test_pw and test_twofapw ):
+                session['logged_in'] = True
+                flash('User ,' + form.username.data +", successful logged in.")
+                return redirect(url_for('spell'))
+            else:
+                if not test_pw :
+                    flash("Incorrect username and/or password was supplied.")
+
+                if not test_twofapw :
+                    flash("Two-factor authentication failure was detected.")
+            
+    return render_template('login.html', title='Login', form=form)
 
 @app.route('/spell', methods=['GET','POST'])
 def spell():
