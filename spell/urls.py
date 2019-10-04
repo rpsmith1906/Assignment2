@@ -3,7 +3,7 @@ from flask import Flask, request, session, abort, render_template, url_for, flas
 
 from spell import app
 from spell import bcrypt
-from spell.spell_forms import Login, Spell, TwoFactor
+from spell.spell_forms import Login, Spell, TwoFactor, Register
 from spell.userman import Users
 
 @app.route('/')
@@ -23,39 +23,65 @@ def logout():
 @app.route('/login', methods=['GET','POST'])
 def login():
     form = Login()
-    
+    print(form.username.data)
     if session.get('logged_in') :
         return redirect(url_for('spell'))
     else:
-        if form.validate_on_submit():
-            if ( form.username.data in Users.password ) :
-                try:
-                    test_pw = bcrypt.check_password_hash(Users.password[form.username.data], form.password.data)
-                except:
-                    test_pw = False
-            else :
-                test_pw = False
+        if ( "click" in request.form ):
+            if ( request.form['click'] == "Log In"):
+                if form.validate_on_submit():
+                    if ( form.username.data in Users.password ) :
+                        try:
+                            test_pw = bcrypt.check_password_hash(Users.password[form.username.data], form.password.data)
+                        except:
+                            test_pw = False
+                    else :
+                        test_pw = False
 
-            if ( form.username.data in Users.twofapassword) :
-                try:
-                    test_twofapw = bcrypt.check_password_hash(Users.twofapassword[form.username.data], form.twofapassword.data)
-                except:
-                    test_twofapw = False
-            else :
-                test_twofapw = False
-            
-            if ( test_pw and test_twofapw ):
-                session['logged_in'] = True
-                flash('User ,' + form.username.data +", successful logged in.")
-                return redirect(url_for('spell'))
+                    if ( form.username.data in Users.twofapassword) :
+                        try:
+                            test_twofapw = bcrypt.check_password_hash(Users.twofapassword[form.username.data], form.twofapassword.data)
+                        except:
+                            test_twofapw = False
+                    else :
+                        test_twofapw = False
+                    
+                    if ( test_pw and test_twofapw ):
+                        session['logged_in'] = True
+                        flash('User ,' + form.username.data +", successful logged in.", "result")
+                        return redirect(url_for('spell'))
+                    else:
+                        if not test_pw :
+                            flash("Incorrect username and/or password was supplied.", "result")
+
+                        if not test_twofapw :
+                            flash("Two-factor authentication failure was detected.", "result")
             else:
-                if not test_pw :
-                    flash("Incorrect username and/or password was supplied.")
-
-                if not test_twofapw :
-                    flash("Two-factor authentication failure was detected.")
-            
+                print ("Here - register")
+                return redirect(url_for('register'))
+                
     return render_template('login.html', title='Login', form=form)
+
+@app.route('/register', methods=['GET','POST'])
+def register():
+    form = Register()
+    print(form.username.data)
+    if session.get('logged_in') :
+        return redirect(url_for('spell'))
+    else:
+        print ( request.form )
+        if ( "click" in request.form ):
+            if ( request.form['click'] == "Log In"):
+                return redirect(url_for('login'))
+            else:
+                if form.validate_on_submit():
+                    if not Users.create_user(form.username.data, form.password.data, form.twofapassword.data):
+                        flash ("User, " + form.username.data + ", registration failure. User already exists.", "success")
+                    else:
+                        flash ("User, " + form.username.data + ", was successfully registered.", "success")    
+    print (form.errors)
+    print ("Here-endloop")       
+    return render_template('register.html', title='Register', form=form)
 
 @app.route('/spell', methods=['GET','POST'])
 def spell():

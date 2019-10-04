@@ -1,19 +1,19 @@
 <link rel="stylesheet" href="/static/style.css" type="text/css">
 
-<form action="/login" method="POST">
+<form action="/register" method="POST">
     {{ form.csrf_token }}
     {{ form.name }}
     <div class="login">
         <div class="login-screen">
             <div class="app-title">
                 <h1>Spell Checker</h1> 
-                    <h2>Login</h2>
+                    <h2>Registration</h2>
             </div>
             <div class="col-md-8">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
-                           <div id=result class="alert alert-{{ category }}">
+                           <div id={{category}} class="alert alert-{{ category }}">
                                 {{ message }}
                             </div>
                         {% endfor %}
@@ -22,11 +22,11 @@
             </div>
             <div class="login-form">
                 <div class="control-group">
-				    <input id=uname type="text" class="login-field" value="" placeholder="Username" name="username">
+				    <input id=uname type="text" class="login-field" value="" placeholder="username" name="username">
                     <label class="login-field-icon fui-user" for="login-name">
                     </label>
                     {% if form.username.errors %}
-                        <div id=result class="invalid-feedback">
+                        <div id=success class="invalid-feedback">
                             {% for error in form.username.errors %}
                                 <span>
                                     {{ error }}
@@ -36,11 +36,11 @@
                     {% endif %}
                 </div>
                 <div class="control-group">
-				    <input id=pword type="password" class="login-field" value="" placeholder="Password" name="password">
+				    <input id=pword type="password" class="login-field" value="" placeholder="password" name="password">
                     <label class="login-field-icon fui-lock" for="login-pass">
                     </label>
                     {% if form.password.errors %}
-                        <div id=result class="invalid-feedback">
+                        <div id=success class="invalid-feedback">
                             {% for error in form.password.errors %}
                                 <span>
                                     {{ error }}
@@ -50,7 +50,21 @@
                     {% endif %}                
                 </div>
                 <div class="control-group">
-                    <input id=2fa type="text" class="login-field" value="" placeholder="Two Factor Password" name="twofapassword">
+                        <input type="password" class="login-field" value="" placeholder="cpassword" name="cpassword">
+                        <label class="login-field-icon fui-lock" for="login-pass">
+                        </label>
+                        {% if form.cpassword.errors %}
+                            <div id=success class="invalid-feedback">
+                                {% for error in form.cpassword.errors %}
+                                    <span>
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}                
+                    </div>
+                <div class="control-group">
+                    <input id=2fa type="text" class="login-field" value="" placeholder="twofapassword" name="twofapassword">
                     <label class="login-field-icon fui-lock" for="login-pass">
                     </label>
                     {% if form.twofapassword.errors %}
@@ -63,8 +77,10 @@
                         </div>
                     {% endif %}                
                 </div>
-                <input type="submit" name="click" value="Log In" class="btn btn-primary btn-small btn-block">
-                <input type="submit" name="click" value="Register" class="btn btn-primary btn-small btn-block">
+                <div>
+                    <input type="submit" name="click" value="Register" class="btn btn-primary btn-small btn-block">
+                    <input type="submit" name="click" value="Log In" class="btn btn-primary btn-small btn-block">
+                </div>
             </div>
         </div>
     </div>

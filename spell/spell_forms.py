@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, InputRequired, ValidationError
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, InputRequired
 
 def my_check_number(form, field):
     print(field.data)
@@ -18,17 +18,16 @@ def my_check_number(form, field):
 class Register(FlaskForm):
 
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Sign Up')
+    password = PasswordField('Password')
+    cpassword = PasswordField('Confirm Password', validators=[InputRequired(), EqualTo('password', message="Passwords must match")])
+    twofapassword = StringField('999-999-9999', validators=[DataRequired(), my_check_number])
+    submit = SubmitField('Register')
 
 class Login(FlaskForm):
 
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    twofapassword = StringField('999-999-9999', validators=[InputRequired(), my_check_number])
-    remember = BooleanField('Remember Me')
+    twofapassword = StringField('999-999-9999', validators=[DataRequired(), my_check_number])
     submit = SubmitField('Login')
 
 class Spell(FlaskForm):

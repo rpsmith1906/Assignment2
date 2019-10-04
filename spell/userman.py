@@ -14,31 +14,32 @@ class Users():
         print ("Here")
         if os.path.isfile("spell/security/users"):
             print ("Found file")
-            Users.file = open("spell/security/users","r+")
+            Users.file = open("spell/security/users","r")
             for line in Users.file:
-                username, password, email = line.split(':', 2)
-                Users.email[username] = email  
+                username, password, twofapassword = line.split(':', 2)
                 Users.password[username] = password
-                Users.twofapassword[username] = bcrypt.generate_password_hash("999-999-9999").decode('utf-8')
-                print (username,password,email)
-                print("Here")
-        else:
-            print ("Open File")
-            Users.file = open("spell/security/users","w")
-
+                Users.twofapassword[username] = twofapassword
+                print (username,password,twofapassword)
+            Users.file.close()
        #     while ( line = file.readlines()):
         #        print (line)
           
 
-    def create_user(username, password, email):
-        #email = dict()
-        #password = {}
-        if (not username in Users.email.values()):
+    def create_user(username, password, twofapassword):
+        print(username, Users.password)
+        if (not username in Users.password):
+            Users.file = open("spell/security/users","w+")
             print(username)
-            Users.email[username] = email  
+            
             Users.password[username] = bcrypt.generate_password_hash(password).decode('utf-8')
+            Users.twofapassword[username] = bcrypt.generate_password_hash(twofapassword).decode('utf-8')
             print ("Write to File")
-            Users.file.write(username+":"+Users.password[username]+":"+email+"\n") 
+            Users.file.write(username+":"+Users.password[username]+":"+Users.twofapassword[username]+"\n") 
+            Users.file.close()
+            return ( True )
+        else:
+            print("User exists")
+            return ( False)
 
 
     def query(username):

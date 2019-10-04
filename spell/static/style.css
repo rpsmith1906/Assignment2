@@ -89,6 +89,11 @@
         display: inline;
     }
 
+    .btn-small {
+        width: 150px;
+        margin: 0 auto;
+        display: inline;
+    }
     .spell-checker {
         text-align: center;
         background-color: #ECF0F1;
