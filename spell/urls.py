@@ -25,7 +25,6 @@ def logout():
 @app.route('/login', methods=['GET','POST'])
 def login():
     form = Login()
-    print(form.username.data)
     if session.get('logged_in') :
         return redirect(url_for('spell'))
     else:
@@ -59,7 +58,6 @@ def login():
                         if not test_twofapw :
                             flash("Two-factor authentication failure was detected.", "result")
             else:
-                print ("Here - register")
                 return redirect(url_for('register'))
                 
     return render_template('login.html', title='Login', form=form)
@@ -67,7 +65,7 @@ def login():
 @app.route('/register', methods=['GET','POST'])
 def register():
     form = Register()
-    print(form.username.data)
+
     if session.get('logged_in') :
         return redirect(url_for('spell'))
     else:
@@ -81,8 +79,6 @@ def register():
                         flash ("User, " + form.username.data + ", registration failure. User already exists.", "success")
                     else:
                         flash ("User, " + form.username.data + ", was successfully registered.", "success")    
-    print (form.errors)
-    print ("Here-endloop")       
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/spell', methods=['GET','POST'])
@@ -95,55 +91,11 @@ def spell():
             if ( request.form['click'] == "Log Out"):
                 return redirect(url_for('logout'))
             else:
-                print("spell", vars(form), form.submit, request.form)
-                cmd = "spell_flask"
-                s = subprocess.check_output('dir', shell=True)
-                print (s)
-                print ("Here")
+                cmd = ["spell/bin/spell_flask", "-", "spell/bin/wordlist.txt"]
                 input = form.content.data.encode('utf-8')
-                results = subprocess.run(cmd, stdout=subprocess.PIPE, input=input)
+                results = subprocess.run(cmd, stdout=subprocess.PIPE, input=input).stdout.decode('utf-8')
                 
-                print(cmd + results.stdout.decode('utf-8') + form.content.data)
-                flash(results.stdout.decode('utf-8'), "results")
+                if results:
+                	flash(results, "results")
                 
     return render_template('spell.html', title="Spell Checker", form=form)
-
-@app.route('/2factor', methods=['GET', 'POST'])
-def twofactor():
-    form=TwoFactor()
-    print (session)
-    if (  not session.get('2factor') ):
-        return home()
-    else:
-        #print("Here - else" + form.validate_on_submit())
-        #form.current_user = Users.current_user
-        if form.validate_on_submit():
-            print("Here")
-            if ( form.password.data == app.config['2faPW'] ):
-                session['logged_in'] = True
-                flash('User ,' + session['2factor'] +", successful logged in via 2FA.")
-                session['2factor'] = ""
-                return redirect(url_for('spell'))
-            else:
-                Users.current_user = ""
-                flash("Login via Two-factor failed.")
-                return redirect(url_for('login'))
-    
-    return render_template('twofalogin.html', title='Two Factor Login', form=form)
-    #return redirect(url_for('login'))
-
-
-#@app.route("/")
-#@app.route("/home")
-#@app.route("/login", methods=['GET', 'POST'])
-#def login():
-    #form = Login()
-    #if form.validate_on_submit():
-    #    print(form.username.data)
-    #    if Users.password[form.username.data] == form.password.data : 
-    #        flash('You have been logged in!', 'success')
-    #        return redirect(url_for('login'))
-    #    else:
-    #        flash('Login Unsuccessful.  Please check username and password')
-
-    #return render_template('login2.html', title='Login', form=form)

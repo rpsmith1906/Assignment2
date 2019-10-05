@@ -3,11 +3,9 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextA
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, InputRequired
 
 def my_check_number(form, field):
-    print(field.data)
     if len(field.data) != 12:
         raise ValidationError('Phone number must be in the format xxx-xxx-xxxx')
     for i,c in enumerate(field.data):
-        print(i,c)
         if i in [3,7]:
             if c != '-':
                 raise ValidationError('Phone number must be in the format xxx-xxx-xxxx')
