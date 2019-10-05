@@ -18,7 +18,7 @@ def my_check_number(form, field):
 class Register(FlaskForm):
 
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-    password = PasswordField('Password')
+    password = PasswordField('Password',validators=[InputRequired()])
     cpassword = PasswordField('Confirm Password', validators=[InputRequired(), EqualTo('password', message="Passwords must match")])
     twofapassword = StringField('999-999-9999', validators=[DataRequired(), my_check_number])
     submit = SubmitField('Register')
