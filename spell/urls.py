@@ -6,6 +6,8 @@ from spell import bcrypt
 from spell.spell_forms import Login, Spell, TwoFactor, Register
 from spell.userman import Users
 
+import subprocess
+
 @app.route('/')
 def home():
     
@@ -94,7 +96,15 @@ def spell():
                 return redirect(url_for('logout'))
             else:
                 print("spell", vars(form), form.submit, request.form)
-                flash("Works", "results")
+                cmd = "spell_flask"
+                s = subprocess.check_output('dir', shell=True)
+                print (s)
+                print ("Here")
+                input = form.content.data.encode('utf-8')
+                results = subprocess.run(cmd, stdout=subprocess.PIPE, input=input)
+                
+                print(cmd + results.stdout.decode('utf-8') + form.content.data)
+                flash(results.stdout.decode('utf-8'), "results")
                 
     return render_template('spell.html', title="Spell Checker", form=form)
 
