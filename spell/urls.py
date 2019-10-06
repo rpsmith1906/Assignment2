@@ -40,10 +40,10 @@ def login():
                         test_pw = False
 
                     if ( form.username.data in Users.twofapassword) :
-                        try:
-                            test_twofapw = bcrypt.check_password_hash(Users.twofapassword[form.username.data], form.twofapassword.data)
-                        except:
-                            test_twofapw = False
+                        if ( Users.twofapassword[form.username.data] != form.twofapassword.data ):
+                             test_twofapw = False
+                        else:
+                             test_twofapw = True
                     else :
                         test_twofapw = False
                     
