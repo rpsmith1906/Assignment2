@@ -10,4 +10,4 @@ install:
 
 script:
 
-  - script.travis 
+  - bash ./script.travis 
