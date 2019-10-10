@@ -14,9 +14,10 @@ class Users():
         if os.path.isfile("spell/security/users"):
             Users.file = open("spell/security/users","r")
             for line in Users.file:
-                username, password, twofapassword = line.rstrip().split(':', 3)
+                username, password, twofapassword, trash = line.rstrip().split(':', 3)
                 Users.password[username] = password
-                Users.twofapassword[username] = twofapassword
+                if twofapassword != "-" :
+                    Users.twofapassword[username] = twofapassword
             Users.file.close()
 
     def create_user(username, password, twofapassword):
@@ -25,7 +26,11 @@ class Users():
             Users.password[username] = bcrypt.generate_password_hash(password).decode('utf-8')
             Users.twofapassword[username] = twofapassword
 
-            Users.file.write(username+":"+Users.password[username]+":"+Users.twofapassword[username]+":\n") 
+            if len(twofapassword) == 0:
+                Users.file.write(username+":"+Users.password[username]+":-:\n") 
+            else:
+                Users.file.write(username+":"+Users.password[username]+":"+Users.twofapassword[username]+":\n") 
+
             Users.file.close()
             return ( True )
         else:
@@ -33,10 +38,6 @@ class Users():
 
 
     def query(username):
-         print(Users.password)
-         print(Users.email)
-         print(list(Users.password.values()))
-         
          if ( not username in Users.email.values() ):
             return ( False )
     

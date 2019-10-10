@@ -44,8 +44,9 @@ def login():
                              test_twofapw = False
                         else:
                              test_twofapw = True
-                    else :
-                        test_twofapw = False
+                    else:
+                        test_twofapw = True
+
                     
                     if ( test_pw and test_twofapw ):
                         session['logged_in'] = True
@@ -69,7 +70,6 @@ def register():
     if session.get('logged_in') :
         return redirect(url_for('spell'))
     else:
-        print ( request.form )
         if ( "click" in request.form ):
             if ( request.form['click'] == "Log In"):
                 return redirect(url_for('login'))
@@ -81,7 +81,7 @@ def register():
                         flash ("User, " + form.username.data + ", was successfully registered.", "success")    
     return render_template('register.html', title='Register', form=form)
 
-@app.route('/spell', methods=['GET','POST'])
+@app.route('/spell_check', methods=['GET','POST'])
 def spell():
     form = Spell()
     if not session.get('logged_in') :
