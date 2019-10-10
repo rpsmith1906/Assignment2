@@ -1,0 +1,4 @@
+flask_bcrypt
+requests
+pytest
+flask_wtf

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+flask run &
+pytest-3

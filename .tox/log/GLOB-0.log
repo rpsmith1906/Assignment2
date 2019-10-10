@@ -1,0 +1,47 @@
+action: GLOB, msg: packaging
+cwd: /root/Assignment2
+cmd: /usr/bin/python3 setup.py sdist --formats=zip --dist-dir .tox/dist
+running sdist
+running egg_info
+writing spell.egg-info/PKG-INFO
+writing dependency_links to spell.egg-info/dependency_links.txt
+writing top-level names to spell.egg-info/top_level.txt
+reading manifest file 'spell.egg-info/SOURCES.txt'
+writing manifest file 'spell.egg-info/SOURCES.txt'
+running check
+warning: check: missing required meta-data: url
+
+warning: check: missing meta-data: if 'author' supplied, 'author_email' must be supplied too
+
+creating spell-1.0
+creating spell-1.0/spell
+creating spell-1.0/spell.egg-info
+copying files to spell-1.0...
+copying README.md -> spell-1.0
+copying setup.py -> spell-1.0
+copying spell/__init__.py -> spell-1.0/spell
+copying spell/spell_forms.py -> spell-1.0/spell
+copying spell/urls.py -> spell-1.0/spell
+copying spell/userman.py -> spell-1.0/spell
+copying spell.egg-info/PKG-INFO -> spell-1.0/spell.egg-info
+copying spell.egg-info/SOURCES.txt -> spell-1.0/spell.egg-info
+copying spell.egg-info/dependency_links.txt -> spell-1.0/spell.egg-info
+copying spell.egg-info/top_level.txt -> spell-1.0/spell.egg-info
+Writing spell-1.0/setup.cfg
+creating '.tox/dist/spell-1.0.zip' and adding 'spell-1.0' to it
+adding 'spell-1.0'
+adding 'spell-1.0/spell'
+adding 'spell-1.0/spell.egg-info'
+adding 'spell-1.0/README.md'
+adding 'spell-1.0/setup.py'
+adding 'spell-1.0/PKG-INFO'
+adding 'spell-1.0/setup.cfg'
+adding 'spell-1.0/spell/__init__.py'
+adding 'spell-1.0/spell/spell_forms.py'
+adding 'spell-1.0/spell/urls.py'
+adding 'spell-1.0/spell/userman.py'
+adding 'spell-1.0/spell.egg-info/PKG-INFO'
+adding 'spell-1.0/spell.egg-info/SOURCES.txt'
+adding 'spell-1.0/spell.egg-info/dependency_links.txt'
+adding 'spell-1.0/spell.egg-info/top_level.txt'
+removing 'spell-1.0' (and everything under it)
