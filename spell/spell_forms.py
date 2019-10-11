@@ -16,19 +16,19 @@ class Register(FlaskForm):
     password = PasswordField('Password',validators=[InputRequired()])
     cpassword = PasswordField('Confirm Password', validators=[InputRequired(), EqualTo('password', message="Passwords must match")])
     twofapassword = StringField('9999999999', validators=[my_check_number])
-    submit = SubmitField('Register')
+#    submit = SubmitField('Register')
 
 class Login(FlaskForm):
 
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     twofapassword = StringField('999-999-9999', validators=[my_check_number])
-    submit = SubmitField('Login')
+#    submit = SubmitField('Login')
 
 class Spell(FlaskForm):
     content = TextAreaField('TYPE or PASTE your text here, then click the SPELL CHECK button', validators=[DataRequired()])
-    submit = SubmitField('Spell Check')
+#    submit = SubmitField('Spell Check')
 
 class TwoFactor(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Login')
+#    submit = SubmitField('Login')

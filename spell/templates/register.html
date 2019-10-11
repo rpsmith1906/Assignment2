@@ -7,22 +7,15 @@
         <div class="login-screen">
             <div class="app-title">
                 <h1>Spell Checker</h1> 
-                    <h2>Registration</h2>
+                <h2>Registration</h2>
             </div>
-            <div class="col-md-8">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                           <div id={{category}} class="alert alert-{{ category }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-            </div>
+            {% if message %}
+               <div id=success class=" col-md-8 alert">
+                    {{ message }}
+            {% endif %}
             <div class="login-form">
                 <div class="control-group">
-				    <input id=uname type="text" class="login-field" placeholder="Username" name="username">
+		    <input id=uname type="text" class="login-field" placeholder="Username" name="username">
                     <label class="login-field-icon fui-user" for="login-name">
                     </label>
                     {% if form.username.errors %}
@@ -36,7 +29,7 @@
                     {% endif %}
                 </div>
                 <div class="control-group">
-				    <input id=pword type="password" class="login-field" placeholder="Password" name="password">
+		    <input id=pword type="password" class="login-field" placeholder="Password" name="password">
                     <label class="login-field-icon fui-lock" for="login-pass">
                     </label>
                     {% if form.password.errors %}
@@ -64,7 +57,7 @@
                         {% endif %}                
                     </div>
                 <div class="control-group">
-                    <input id=2fa type="text" class="login-field" placeholder="Phone Number xxx-xx-xxxx" name="twofapassword">
+                    <input id=2fa type="text" class="login-field" placeholder="Phone Number xxxxxxxxx" name="twofapassword">
                     <label class="login-field-icon fui-lock" for="login-pass">
                     </label>
                     {% if form.twofapassword.errors %}

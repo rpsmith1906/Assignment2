@@ -25,60 +25,73 @@ def logout():
 @app.route('/login', methods=['GET','POST'])
 def login():
     form = Login()
+    messages = []
+
     if session.get('logged_in') :
         return redirect(url_for('spell'))
     else:
-        if ( "click" in request.form ):
-            if ( request.form['click'] == "Log In"):
-                if form.validate_on_submit():
-                    if ( form.username.data in Users.password ) :
-                        try:
-                            test_pw = bcrypt.check_password_hash(Users.password[form.username.data], form.password.data)
-                        except:
-                            test_pw = False
-                    else :
-                        test_pw = False
-
-                    if ( form.username.data in Users.twofapassword) :
-                        if ( Users.twofapassword[form.username.data] != form.twofapassword.data ):
-                             test_twofapw = False
-                        else:
-                             test_twofapw = True
-                    else:
-                        test_twofapw = True
-
-                    
-                    if ( test_pw and test_twofapw ):
-                        session['logged_in'] = True
-                        flash('User ,' + form.username.data +", successful logged in.", "result")
-                        return redirect(url_for('spell'))
-                    else:
-                        if not test_pw :
-                            flash("Incorrect username and/or password was supplied.", "result")
-
-                        if not test_twofapw :
-                            flash("Two-factor authentication failure was detected.", "result")
+        if ( "click" in request.form ) :
+            if ( request.form['click'] == "Log In" ) :
+                login = True
             else:
                 return redirect(url_for('register'))
+        else:
+            login = False
+
+        if ( login ) or ( request.method == "POST" ):
+            if form.validate_on_submit():
+                if ( form.username.data in Users.password ) :
+                    try:
+                        test_pw = bcrypt.check_password_hash(Users.password[form.username.data], form.password.data)
+                    except:
+                        test_pw = False
+                else :
+                    test_pw = False
+
+                if ( form.username.data in Users.twofapassword) :
+                    if ( Users.twofapassword[form.username.data] != form.twofapassword.data ):
+                         test_twofapw = False
+                    else:
+                         test_twofapw = True
+                else:
+                    test_twofapw = True
+
+                    
+                if ( test_pw and test_twofapw ):
+                    session['logged_in'] = True
+                    messages.append('User ,' + form.username.data +", successful logged in.")
+                    return render_template('spell.html', title="Spell Checker", form=Spell(), len=len(messages), messages=messages)
+                else:
+                    if not test_pw :
+                        messages.append("Incorrect username and/or password was supplied.")
+
+                    if not test_twofapw :
+                        messages.append("Two-factor authentication failure was detected.")
+
+                    return render_template('login.html', title='Login', form=form, len=len(messages), messages=messages)
+            return render_template('login.html', title='Login', form=form)
                 
     return render_template('login.html', title='Login', form=form)
 
 @app.route('/register', methods=['GET','POST'])
 def register():
-    form = Register()
-
+    form=Register()
+    message=""
     if session.get('logged_in') :
         return redirect(url_for('spell'))
     else:
-        if ( "click" in request.form ):
-            if ( request.form['click'] == "Log In"):
+        print("Here")
+        if ( request.method == "POST" ) :
+            if ( "click" in request.form ) and ( request.form['click'] == "Log In") :
                 return redirect(url_for('login'))
             else:
+                print("Here2")
                 if form.validate_on_submit():
                     if not Users.create_user(form.username.data, form.password.data, form.twofapassword.data):
-                        flash ("User, " + form.username.data + ", registration failure. User already exists.", "success")
+                        message = "User, " + form.username.data + ", registration failure. User already exists."
                     else:
-                        flash ("User, " + form.username.data + ", was successfully registered.", "success")    
+                        message = "User, " + form.username.data + ", was successfully registered."
+                    return render_template('register.html', title='Register', form=form, message=message)
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/spell_check', methods=['GET','POST'])
