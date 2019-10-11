@@ -3,6 +3,7 @@
 <form action="/login" method="POST">
     {{ form.csrf_token }}
     {{ form.name }}
+    {{ form.hidden_tag() }}
     <div class="login">
         <div class="login-screen">
             <div class="app-title">
@@ -10,19 +11,17 @@
                     <h2>Login</h2>
             </div>
             <div class="col-md-8">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                           <div id=result class="alert alert-{{ category }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
+                {% if messages %}
+                    {% for i in range(0,len) %}
+                        <div id=result class="alert">
+                            {{ messages[i] }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
             <div class="login-form">
                 <div class="control-group">
-				    <input id=uname type="text" class="login-field" value="" placeholder="Username" name="username">
+                    <input id=uname type="text" class="login-field" value="" placeholder="Username" name="username">
                     <label class="login-field-icon fui-user" for="login-name">
                     </label>
                     {% if form.username.errors %}
@@ -36,7 +35,7 @@
                     {% endif %}
                 </div>
                 <div class="control-group">
-				    <input id=pword type="password" class="login-field" value="" placeholder="Password" name="password">
+                    <input id=pword type="password" class="login-field" value="" placeholder="Password" name="password">
                     <label class="login-field-icon fui-lock" for="login-pass">
                     </label>
                     {% if form.password.errors %}
@@ -50,10 +49,10 @@
                     {% endif %}                
                 </div>
                 <div class="control-group">
-                    <input id=2fa type="text" class="login-field" value="" placeholder="Two Factor Password" name="twofapassword">
+                    <input id=2fa type="password" class="login-field" value="" placeholder="Phone Number 9999999999" name="twofapassword">
                     <label class="login-field-icon fui-lock" for="login-pass">
                     </label>
-                    {% if form.twofapassword.errors %}
+                    {% if form.password.errors %}
                         <div id=result class="invalid-feedback">
                             {% for error in form.twofapassword.errors %}
                                 <span>

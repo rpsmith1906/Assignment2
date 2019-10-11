@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextA
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, InputRequired
 
 def my_check_number(form, field):
+    print("Validate")
     if ( len(field.data) > 0 and len(field.data) < 10 ):
         raise ValidationError('Phone number must be in the format xxxxxxxxxx')
     for i,c in enumerate(field.data):
@@ -19,11 +20,10 @@ class Register(FlaskForm):
     submit = SubmitField('Register')
 
 class Login(FlaskForm):
-
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    twofapassword = StringField('999-999-9999', validators=[my_check_number])
-    submit = SubmitField('Login')
+    twofapassword = StringField('9999999999', validators=[my_check_number])
+#    submit = SubmitField('Login')
 
 class Spell(FlaskForm):
     content = TextAreaField('TYPE or PASTE your text here, then click the SPELL CHECK button', validators=[DataRequired()])

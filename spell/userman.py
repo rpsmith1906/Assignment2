@@ -16,8 +16,8 @@ class Users():
             for line in Users.file:
                 username, password, twofapassword, trash = line.rstrip().split(':', 3)
                 Users.password[username] = password
-                if twofapassword != "-" :
-                    Users.twofapassword[username] = twofapassword
+                #if twofapassword != "-" :
+                #    Users.twofapassword[username] = twofapassword
             Users.file.close()
 
     def create_user(username, password, twofapassword):
@@ -26,10 +26,10 @@ class Users():
             Users.password[username] = bcrypt.generate_password_hash(password).decode('utf-8')
             Users.twofapassword[username] = twofapassword
 
-            if len(twofapassword) == 0:
-                Users.file.write(username+":"+Users.password[username]+":-:\n") 
-            else:
-                Users.file.write(username+":"+Users.password[username]+":"+Users.twofapassword[username]+":\n") 
+            #if len(twofapassword) == 0:
+            #    Users.file.write(username+":"+Users.password[username]+":-:\n") 
+            #else:
+            Users.file.write(username+":"+Users.password[username]+":"+Users.twofapassword[username]+":\n") 
 
             Users.file.close()
             return ( True )
