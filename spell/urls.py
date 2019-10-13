@@ -39,7 +39,6 @@ def login():
             login = False
 
         if ( login ) or ( request.method == "POST" ):
-            print(form.validate())
             if form.validate_on_submit():
                 if ( form.username.data in Users.password ) :
                     try:
@@ -85,16 +84,17 @@ def register():
     else:
         print("Here")
         if ( request.method == "POST" ) :
-            if ( "click" in request.form ) and ( request.form['click'] == "Log In") :
-                return redirect(url_for('login'))
-            else:
-                print("Here2")
-                if form.validate_on_submit():
-                    if not Users.create_user(form.username.data, form.password.data, form.twofapassword.data):
-                        message = "User, " + form.username.data + ", registration failure. User already exists."
-                    else:
-                        message = "User, " + form.username.data + ", was success fully registered."
-                    return render_template('register.html', title='Register', form=form, message=message)
+            return render_template('register.html', title='Register', form=form, message="Success")
+            #if ( "click" in request.form ) and ( request.form['click'] == "Log In") :
+            #    return redirect(url_for('login'))
+            #else:
+            #    print("Here2")
+            #    if form.validate_on_submit():
+            #        if not Users.create_user(form.username.data, form.password.data, form.twofapassword.data):
+            #            message = "User, " + form.username.data + ", registration failure. User already exists."
+            #        else:
+            #            message = "User, " + form.username.data + ", was success fully registered."
+            #        return render_template('register.html', title='Register', form=form, message=message)
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/spell_check', methods=['GET','POST'])
