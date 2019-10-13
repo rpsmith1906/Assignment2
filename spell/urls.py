@@ -93,7 +93,7 @@ def register():
                     if not Users.create_user(form.username.data, form.password.data, form.twofapassword.data):
                         message = "User, " + form.username.data + ", registration failure. User already exists."
                     else:
-                        message = "User, " + form.username.data + ", was successfully registered."
+                        message = "User, " + form.username.data + ", was success fully registered."
                     return render_template('register.html', title='Register', form=form, message=message)
     return render_template('register.html', title='Register', form=form)
 
