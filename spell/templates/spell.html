@@ -8,17 +8,13 @@
             <h1>Spell Checker</h1> 
         </div>
         <div class="col-md-8">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        {% if category != "results" %}
-                            <div id={{category}} class="alert alert-{{ category }}">
-                                {{ message }}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div id={{status}} class="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
         <div class="control-group spell-checker-input">
             <textarea type="textarea" name="content" id="content" placeholder="">

@@ -14,7 +14,7 @@ class Register(FlaskForm):
 
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     password = PasswordField('Password',validators=[InputRequired()])
-    cpassword = PasswordField('Confirm Password', validators=[InputRequired(), EqualTo('password', message="Passwords must match")])
+#    cpassword = PasswordField('Confirm Password', validators=[InputRequired(), EqualTo('password', message="Passwords must match")])
     twofapassword = StringField('9999999999', validators=[my_check_number])
 #    submit = SubmitField('Register')
 

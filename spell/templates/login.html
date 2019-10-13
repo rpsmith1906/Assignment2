@@ -10,19 +10,17 @@
                     <h2>Login</h2>
             </div>
             <div class="col-md-8">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                           <div id=result class="alert alert-{{ category }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
+                {% if messages %}
+                    {% for message in messages %}
+                       <div id=result class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
             <div class="login-form">
                 <div class="control-group">
-				    <input id=uname type="text" class="login-field" value="" placeholder="Username" name="username">
+		    <input id=uname type="text" class="login-field" value="" placeholder="Username" name="username">
                     <label class="login-field-icon fui-user" for="login-name">
                     </label>
                     {% if form.username.errors %}
@@ -36,7 +34,7 @@
                     {% endif %}
                 </div>
                 <div class="control-group">
-				    <input id=pword type="password" class="login-field" value="" placeholder="Password" name="password">
+		    <input id=pword type="password" class="login-field" value="" placeholder="Password" name="password">
                     <label class="login-field-icon fui-lock" for="login-pass">
                     </label>
                     {% if form.password.errors %}

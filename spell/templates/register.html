@@ -43,20 +43,6 @@
                     {% endif %}                
                 </div>
                 <div class="control-group">
-                        <input type="password" class="login-field" placeholder="Confirm Password" name="cpassword">
-                        <label class="login-field-icon fui-lock" for="login-pass">
-                        </label>
-                        {% if form.cpassword.errors %}
-                            <div id=success class="invalid-feedback">
-                                {% for error in form.cpassword.errors %}
-                                    <span>
-                                        Failure - {{ error }}
-                                    </span>
-                                {% endfor %}
-                            </div>
-                        {% endif %}                
-                    </div>
-                <div class="control-group">
                     <input id=2fa type="text" class="login-field" placeholder="Phone Number xxxxxxxxx" name="twofapassword">
                     <label class="login-field-icon fui-lock" for="login-pass">
                     </label>
