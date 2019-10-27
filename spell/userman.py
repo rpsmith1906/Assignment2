@@ -2,6 +2,7 @@
 
 from flask import Flask
 from spell import bcrypt
+from spell import db
 import os.path
 
 class User(db.Model):

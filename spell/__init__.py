@@ -1,12 +1,14 @@
 from flask import Flask, session
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+import os
+cwd = os.getcwd()
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-db = SQLAlchemy(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + cwd + '/spell/security/test.db'
+db = SQLAlchemy(app)
 
 from spell.userman import Users
 from spell.userman import User
