@@ -10,9 +10,17 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), unique=True, nullable=False)
     twofapassword = db.Column(db.String(10))
+    sessions = db.relationship('Log', backref='username', lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+class Log(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    session = db.Column(db.String(80), unique=True, nullable=False)
+    login = db.Column(db.DateTime)
+    logout = db.Column(db.DateTime)
+    username_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class Users():
     email = dict()
