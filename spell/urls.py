@@ -41,19 +41,22 @@ def login():
 
         if ( login ) or ( request.method == "POST" ):
             if form.validate_on_submit():
-                if ( Users.check_user(form.username.data, form.password.data, form.twofapassword.data) ):
+                check = Users.check_user(form.username.data, form.password.data, form.twofapassword.data)
+                print(check)
+                if ( check[0] ):
                     session['logged_in'] = True
                     messages.append('User ,' + form.username.data +", successful logged in.")
                     return render_template('spell.html', title="Spell Checker", form=Spell(), len=len(messages), messages=messages, status="result")
                 else:
-                    if not test_pw :
+                    if not check[1] :
+                        print("Here", check[1])
                         messages.append("Incorrect username and/or password was supplied.")
 
-                    if not test_twofapw :
+                    if not check[2] :
+                        print("Here1",check[2])
                         messages.append("Two-factor authentication failure was detected.")
 
                     return render_template('login.html', title='Login', form=form, len=len(messages), messages=messages)
-                print("LO4")
             return render_template('login.html', title='Login', form=form)
                 
     return render_template('login.html', title='Login', form=form)

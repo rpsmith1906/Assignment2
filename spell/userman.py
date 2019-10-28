@@ -39,20 +39,23 @@ class Users():
 
     def check_user(username, password, twofapassword) :
         if ( User.query.filter_by(username=username).first() is None ) :
-            return ( False )
+            return ( False, False, False )
         else:
             pw = User.query.filter_by(username=username).first().password
-            print (pw)
-            if ( bcrypt.check_password_hash(pw, password) ) :
-                print ("Return")
-                return ( False )
-
-            print("Here")
-            pw = User.query.filter_by(username=username).twofapassword.first()
-            if ( len(pw) != 0 ) :
-                if ( pw != twofapassword) :
-                    return ( False )
+            if ( not bcrypt.check_password_hash(pw, password) ) :
+                passw = False
             else:
+                passw = True
+
+            pw = User.query.filter_by(username=username).first().twofapassword
+            if ( pw is None ) :
                 if ( len( twofapassword ) != 0 ) :
-                    return ( False )
-        return ( True )
+                    twofa = False
+                else:
+                    twofa = True
+            else:
+                if ( pw == twofapassword ) :
+                    twofa = True
+                else:
+                    twofa = False
+        return ( passw and twofa, passw, twofa )
