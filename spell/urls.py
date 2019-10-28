@@ -4,7 +4,8 @@ from flask import Flask, request, session, abort, render_template, url_for, flas
 from spell import app
 from spell import bcrypt
 from spell.spell_forms import Login, Spell, TwoFactor, Register
-from spell.userman import Users
+from spell.userman import Users, User
+
 
 import subprocess
 
@@ -40,25 +41,7 @@ def login():
 
         if ( login ) or ( request.method == "POST" ):
             if form.validate_on_submit():
-                if ( form.username.data in Users.password ) :
-                    try:
-                        test_pw = bcrypt.check_password_hash(Users.password[form.username.data], form.password.data)
-                    except:
-                        test_pw = False
-                else :
-                    test_pw = False
-
-                if ( form.username.data in Users.twofapassword) :
-                    if ( Users.twofapassword[form.username.data] != form.twofapassword.data ):
-                         test_twofapw = False
-                    else:
-                         test_twofapw = True
-                else:
-                    test_twofapw = True
-
-                print("LO3")
-                    
-                if ( test_pw and test_twofapw ):
+                if ( Users.check_user(form.username.data, form.password.data, form.twofapassword.data) ):
                     session['logged_in'] = True
                     messages.append('User ,' + form.username.data +", successful logged in.")
                     return render_template('spell.html', title="Spell Checker", form=Spell(), len=len(messages), messages=messages, status="result")
@@ -83,15 +66,18 @@ def register():
         return redirect(url_for('spell'))
     else:
         if ( request.method == "POST" ) :
-            addr = 'http://127.0.0.1:5000'
             if ( "click" in request.form ) and ( request.form['click'] == "Log In") :
                 return redirect(url_for('login'))
             else:
                 if form.validate_on_submit():
-                    if not Users.create_user(form.username.data, form.password.data, form.twofapassword.data):
-                        message = "User, " + form.username.data + ", registration failure. User already exists."
+                    if ( User.query.filter_by(username=form.username.data).first() is None ) :
+                        if ( Users.create_user(form.username.data, form.password.data, form.twofapassword.data) ) :
+                            message = "User, " + form.username.data + ", was success fully registered."
+                        else:
+                            message = "User, " + form.username.data + ", was not success fully registered."
                     else:
-                        message = "User, " + form.username.data + ", was success fully registered."
+                        message = "User, " + form.username.data + ", registration failure. User already exists."
+                    
                     return render_template('register.html', title='Register', form=form, message=message)
     return render_template('register.html', title='Register', form=form)
 
