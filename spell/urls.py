@@ -12,15 +12,15 @@ import subprocess
 @app.route('/')
 def home():
     
-    if not session.get('logged_in'):
+    if not session.get('user'):
         return redirect(url_for('login'))
     else:
         return redirect(url_for('spell'))
 
 @app.route('/logout')
 def logout():
-    session['logged_in'] = False
-    flash('User successfully logged out.')
+    if ( Users.logout()) :
+        flash('User successfully logged out.')
     return home()
 
 @app.route('/login', methods=['GET','POST'])
@@ -28,7 +28,7 @@ def login():
     form = Login()
     messages = []
 
-    if session.get('logged_in') :
+    if session.get('user') :
         return redirect(url_for('spell'))
     else:
         if ( "click" in request.form ) :
@@ -42,18 +42,15 @@ def login():
         if ( login ) or ( request.method == "POST" ):
             if form.validate_on_submit():
                 check = Users.check_user(form.username.data, form.password.data, form.twofapassword.data)
-                print(check)
                 if ( check[0] ):
-                    session['logged_in'] = True
-                    messages.append('User ,' + form.username.data +", successful logged in.")
-                    return render_template('spell.html', title="Spell Checker", form=Spell(), len=len(messages), messages=messages, status="result")
+                    if ( Users.login (form.username.data) ) :
+                        messages.append('User ,' + form.username.data +", successful logged in.")
+                        return render_template('spell.html', title="Spell Checker", form=Spell(), len=len(messages), messages=messages, status="result")
                 else:
                     if not check[1] :
-                        print("Here", check[1])
                         messages.append("Incorrect username and/or password was supplied.")
 
                     if not check[2] :
-                        print("Here1",check[2])
                         messages.append("Two-factor authentication failure was detected.")
 
                     return render_template('login.html', title='Login', form=form, len=len(messages), messages=messages)
@@ -65,7 +62,7 @@ def login():
 def register():
     form=Register()
     message=""
-    if session.get('logged_in') :
+    if session.get('user') :
         return redirect(url_for('spell'))
     else:
         if ( request.method == "POST" ) :
@@ -87,7 +84,7 @@ def register():
 @app.route('/spell_check', methods=['GET','POST'])
 def spell():
     form = Spell()
-    if not session.get('logged_in') :
+    if not session.get('user') :
         return home()
     else:
         if ( "click" in request.form ):

@@ -1,22 +1,23 @@
 #!/usr/bin/python3
-
-from flask import Flask
-from spell import bcrypt
-from spell import db
 import os.path
 
+from flask import Flask, session
+from spell import bcrypt
+from spell import db
+from datetime import datetime, date, time
+
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    password = db.Column(db.String(70), unique=True, nullable=False)
+    #id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), primary_key=True, unique=True, nullable=False)
+    password = db.Column(db.String(60), unique=True, nullable=False)
     twofapassword = db.Column(db.String(10))
-    sessions = db.relationship('Log', backref='username', lazy=True)
+    sessions = db.relationship('Log', backref='user', lazy=True)
 
 class Log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.DateTime)
     logout = db.Column(db.DateTime)
-    username_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    username = db.Column(db.Integer, db.ForeignKey('user.username'), nullable=False)
 
 class Users():
     #password = {}
@@ -35,7 +36,7 @@ class Users():
             return ( True )
         except:
             db.session.rollback() 
-            return( True )
+            return( False )
 
     def check_user(username, password, twofapassword) :
         if ( User.query.filter_by(username=username).first() is None ) :
@@ -59,3 +60,30 @@ class Users():
                 else:
                     twofa = False
         return ( passw and twofa, passw, twofa )
+
+    def login( username ) :
+        row = Log()
+        row.username = username
+        row.login = datetime.now()
+        session['user'] = username
+        
+        try:
+            db.session.add(row)
+            db.session.commit()
+            session['session_id'] = row.id
+            return ( True )
+        except:
+            db.session.rollback() 
+            return( False )
+
+    def logout() :
+        row = Log.query.filter_by(id=session['session_id']).first()
+        row.logout = datetime.now()
+        
+        try:
+            db.session.commit()
+            session.pop('user')
+            return ( True )
+        except:
+            db.session.rollback() 
+            return( False )
