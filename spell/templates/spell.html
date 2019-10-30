@@ -23,22 +23,25 @@
         <input type="submit" name="click" value="Spell Check" class="btn btn-primary btn-large btn-block spell-buttons">
         <input type="submit" name="click" value="Log Out" class="btn btn-primary btn-large btn-block spell-buttons">
       
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        {% if category == "results" %}
-                            <div class="app-title">
-                                <h1>Spell Checker - Results</h1>
-                            </div>
-                            <div id=inputtext class="spell-checker-results">
-                                <span>
-                                   {{ message }} 
-                                </span>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+            {% if message %}
+                <p id=misspelled></p>
+                    <div class="app-title">
+                        <h1>Spell Checker - Results</h1>
+                    </div>
+                    <h3>Submitted Text</h3>
+                    <div id=textout class="spell-checker-results">
+                        <span>
+                            {{ input }}
+                        </span>
+                    </div>
+                    <h3>Misspelled Words</h3>
+                    <div id=misspelled class="spell-checker-results">
+                        <span>
+                            {{ message }}
+                        </span>
+                    </div>
+                </p>
+            {% endif %}    
         </div>
     </div>
 </form>
