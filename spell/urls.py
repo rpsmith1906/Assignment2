@@ -88,14 +88,18 @@ def spell():
         return home()
     else:
         if ( "click" in request.form ):
-            if ( request.form['click'] == "Log Out"):
+            if ( request.form['click'] == "Log Out") :
                 return redirect(url_for('logout'))
             else:
-                cmd = ["spell/bin/spell_flask", "-", "spell/bin/wordlist.txt"]
-                input = form.content.data.encode('utf-8')
-                results = subprocess.run(cmd, stdout=subprocess.PIPE, input=input).stdout.decode('utf-8')
+                if ( len (form.content.data) != 0) :
+                    cmd = ["spell/bin/spell_flask", "-", "spell/bin/wordlist.txt"]
+                    input = form.content.data.encode('utf-8')
+                    #result = subprocess.run(cmd, stdout=subprocess.PIPE, input=input).stdout.decode('utf-8')
+                    result="Works"
                 
-                if results:
-                	flash(results, "results")
+                    Users.post (form.content.data, result)
+
+                    if result:
+                        return render_template('spell.html', title='Spell Checker', form=form, message=result, input=form.content.data)
                 
     return render_template('spell.html', title="Spell Checker", form=form)

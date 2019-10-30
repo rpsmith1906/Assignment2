@@ -12,12 +12,21 @@ class User(db.Model):
     password = db.Column(db.String(60), unique=True, nullable=False)
     twofapassword = db.Column(db.String(10))
     sessions = db.relationship('Log', backref='user', lazy=True)
+    posts = db.relationship('Posts', backref='user', lazy=True)
 
 class Log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.DateTime)
     logout = db.Column(db.DateTime)
-    username = db.Column(db.Integer, db.ForeignKey('user.username'), nullable=False)
+    username = db.Column(db.String(20), db.ForeignKey('user.username'), nullable=False)
+    posts = db.relationship('Posts', backref='log', lazy=True)
+
+class Posts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    spellpost = db.Column(db.String(100000))
+    spellresult = db.Column(db.String(40000))
+    username = db.Column(db.String(20), db.ForeignKey('user.username'), nullable=False)
+    session = db.Column(db.Integer, db.ForeignKey('log.id'), nullable=False)
 
 class Users():
     #password = {}
@@ -77,12 +86,32 @@ class Users():
             return( False )
 
     def logout() :
+        row = Log()
         row = Log.query.filter_by(id=session['session_id']).first()
+
+        if ( row is None ) :
+            session.pop('user')
+            return ( True )
+
         row.logout = datetime.now()
         
         try:
             db.session.commit()
             session.pop('user')
+            return ( True )
+        except:
+            db.session.rollback() 
+            return( False )
+
+    def post(spellpost, spellresult) :
+        row = Posts()
+        row.spellpost = spellpost
+        row.spellresult = spellresult
+        row.username = session['user']
+
+        try:
+            db.session.add(row)
+            db.session.commit()
             return ( True )
         except:
             db.session.rollback() 
