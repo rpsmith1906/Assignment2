@@ -107,6 +107,7 @@ class Users():
         row = Posts()
         row.spellpost = spellpost
         row.spellresult = spellresult
+        row.session = session['session_id']
         row.username = session['user']
 
         try:

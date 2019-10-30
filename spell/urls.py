@@ -4,7 +4,7 @@ from flask import Flask, request, session, abort, render_template, url_for, flas
 from spell import app
 from spell import bcrypt
 from spell.spell_forms import Login, Spell, TwoFactor, Register
-from spell.userman import Users, User
+from spell.userman import Users, User, Posts
 
 
 import subprocess
@@ -86,7 +86,7 @@ def spell():
     form = Spell()
     if not session.get('user') :
         return home()
-    else:
+    else :
         if ( "click" in request.form ):
             if ( request.form['click'] == "Log Out") :
                 return redirect(url_for('logout'))
@@ -103,3 +103,17 @@ def spell():
                         return render_template('spell.html', title='Spell Checker', form=form, message=result, input=form.content.data)
                 
     return render_template('spell.html', title="Spell Checker", form=form)
+
+@app.route('/history')
+def history() :
+    if not session.get('user') :
+        return home()
+    else :
+        if ( session['user'] == "admin" ) :
+            history = Posts.query.all()
+        else :
+            history = Posts.query.filter_by(username=session['user']).all()
+
+        print (len(history), history)
+    return home()
+        
