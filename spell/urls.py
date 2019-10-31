@@ -3,7 +3,7 @@ from flask import Flask, request, session, abort, render_template, url_for, flas
 
 from spell import app
 from spell import bcrypt
-from spell.spell_forms import Login, Spell, TwoFactor, Register
+from spell.spell_forms import Login, Spell, TwoFactor, Register, History
 from spell.userman import Users, User, Posts
 
 
@@ -104,16 +104,18 @@ def spell():
                 
     return render_template('spell.html', title="Spell Checker", form=form)
 
-@app.route('/history')
-def history() :
+@app.route('/history', methods=['GET','POST'])
+def history():
+    form = History()
     if not session.get('user') :
         return home()
     else :
-        if ( session['user'] == "admin" ) :
-            history = Posts.query.all()
+        if (( form.username.data ) and ( session['user'] == "admin")) :
+            user = form.username.data
         else :
-            history = Posts.query.filter_by(username=session['user']).all()
+            user = session['user']
 
-        print (len(history), history)
-    return home()
+        history = Posts.query.with_entities(Posts.id).filter_by(username=user).all()
+
+    return render_template('history.html', Posts=history, form=form, user=user, realuser=session['user'])
         
