@@ -118,4 +118,10 @@ def history():
         history = Posts.query.with_entities(Posts.id).filter_by(username=user).all()
 
     return render_template('history.html', Posts=history, form=form, user=user, realuser=session['user'])
+
+@app.route("/history/query<query>")
+def history_detail(query):
+    history_detail = Posts.query.with_entities(Posts.id, Posts.username,Posts.spellpost, Posts.spellresult).filter_by(id=query).first()
+
+    return render_template('history_detail.html', Post=history_detail, form=History(), realuser=session['user'])
         
