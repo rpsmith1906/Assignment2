@@ -32,3 +32,6 @@ class Spell(FlaskForm):
 class TwoFactor(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
 #    submit = SubmitField('Login')
+
+class History(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])

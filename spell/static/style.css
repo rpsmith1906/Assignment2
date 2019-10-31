@@ -25,7 +25,7 @@
     text-align: center;
     color: #777;
     }
-    
+
     .login-form {
     text-align: center;
     }
@@ -119,3 +119,6 @@
     .spell-checker-input {
     }
 
+    .inline-block {
+        display: inline-block;
+    }
