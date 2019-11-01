@@ -4,7 +4,7 @@ from flask import Flask, request, session, abort, render_template, url_for, flas
 from spell import app
 from spell import bcrypt
 from spell.spell_forms import Login, Spell, TwoFactor, Register, History
-from spell.userman import Users, User, Posts
+from spell.userman import Users, User, Posts, Log
 
 
 import subprocess
@@ -124,4 +124,27 @@ def history_detail(query):
     history_detail = Posts.query.with_entities(Posts.id, Posts.username,Posts.spellpost, Posts.spellresult).filter_by(id=query).first()
 
     return render_template('history_detail.html', Post=history_detail, form=History(), realuser=session['user'])
+
+@app.route("/login_history", methods=['GET','POST'])
+def login_history():
+    form = History()
+    if not session.get('user') :
+        return home()
+    else :
+        if ( session['user'] != "admin" ) :
+            return home()
+        else :
+            if ( form.username.data ) :
+                user = form.username.data
+            else :
+                user = session['user']
+
+            print(user)
+            log_history = Log.query.with_entities(Log.id, Log.login, Log.logout).filter_by(username=user).all()
+            
+            for log in log_history:
+                print(log[0], log[1])
+
+            print(log_history)
+    return render_template('log_history.html', History=log_history, form=History(), user=user)
         
