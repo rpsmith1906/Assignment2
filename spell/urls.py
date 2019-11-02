@@ -1,3 +1,4 @@
+import sys
 from flask import Flask
 from flask import Flask, request, session, abort, render_template, url_for, flash, redirect
 
@@ -19,7 +20,7 @@ def home():
 
 @app.route('/logout')
 def logout():
-    if ( Users.logout()) :
+    if ( session.get('user') and Users.logout()) :
         flash('User successfully logged out.')
     return home()
 
@@ -92,11 +93,13 @@ def spell():
                 return redirect(url_for('logout'))
             else:
                 if ( len (form.content.data) != 0) :
-                    cmd = ["spell/bin/spell_flask", "-", "spell/bin/wordlist.txt"]
-                    input = form.content.data.encode('utf-8')
-                    #result = subprocess.run(cmd, stdout=subprocess.PIPE, input=input).stdout.decode('utf-8')
-                    result="Works"
-                
+                    if sys.platform.startswith('win'):
+                        result = "Windows, Testing"
+                    else:
+                        cmd = ["spell/bin/spell_flask", "-", "spell/bin/wordlist.txt"]
+                        input = form.content.data.encode('utf-8')
+                        result = subprocess.run(cmd, stdout=subprocess.PIPE, input=input).stdout.decode('utf-8')
+                    
                     Users.post (form.content.data, result)
 
                     if result:
@@ -121,8 +124,10 @@ def history():
 
 @app.route("/history/query<query>")
 def history_detail(query):
-    history_detail = Posts.query.with_entities(Posts.id, Posts.username,Posts.spellpost, Posts.spellresult).filter_by(id=query).first()
+    if not session.get('user') :
+        return home()
 
+    history_detail = Posts.query.with_entities(Posts.id, Posts.username,Posts.spellpost, Posts.spellresult).filter_by(id=query).first()
     return render_template('history_detail.html', Post=history_detail, form=History(), realuser=session['user'])
 
 @app.route("/login_history", methods=['GET','POST'])
