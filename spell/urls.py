@@ -88,10 +88,11 @@ def spell():
     if not session.get('user') :
         return home()
     else :
-        if ( "click" in request.form ):
-            if ( request.form['click'] == "Log Out") :
+        if ( request.method == "POST" ) :
+            if  ( ("click" in request.form ) and ( request.form['click'] == "Log Out")) :
                 return redirect(url_for('logout'))
             else:
+                print ("Test")
                 if ( len (form.content.data) != 0) :
                     if sys.platform.startswith('win'):
                         result = "Windows, Testing"
@@ -101,7 +102,7 @@ def spell():
                         result = subprocess.run(cmd, stdout=subprocess.PIPE, input=input).stdout.decode('utf-8')
                     
                     Users.post (form.content.data, result)
-
+                    print ("Here", result)
                     if result:
                         return render_template('spell.html', title='Spell Checker', form=form, message=result, input=form.content.data)
                 

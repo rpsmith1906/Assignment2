@@ -71,25 +71,3 @@ def test_registration():
     resp = registration("admin", "test", "", "failure","success")
     client.get(address + "/logout")
     assert resp, "Successfully failed 2FA registration - User exists"
-
-
-
-#def test_registration():
-#    client = requests.session()
-    # Retrieve the CSRF token first
-
-#    a=client.get(address)
-#    extract = BeautifulSoup(a.text, "lxml")
-#    csrftoken = extract.find(id="csrf_token")['value']
-
-#   payload = {
-#        'csrf_token':csrftoken,
-#        'username':'admin1',
-#        'password':'Administrator@1',
-#        'twofapassword':'12345678901'
-#    }
-#    print (payload)
-#    r = client.post(address, payload)
-#    print (r.text)
-#    client.get("http://127.0.0.1:5000/logout")
-#    assert (0)
