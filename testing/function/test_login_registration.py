@@ -42,6 +42,7 @@ def registration(user, pword, twofa, search, id_field ):
     }
 
     r = client.post(addr, login_data)
+    print (r.text)
     data = getid(r.text, id_field) 
     assert data != None, "Missing id='success' in the html response"
     return ( search in data.text.lower() )

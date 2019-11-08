@@ -79,10 +79,10 @@ def post_spell():
     return ()
 
 def test_registration_history_nonadmin():
-    resp = registration("admin22", "test", "", "success","success")
+    resp = registration("admin32", "test", "", "success","success")
     assert resp, "Successfully registration"
 
-    resp = login("admin22", "test", "", "success","result")
+    resp = login("admin32", "test", "", "success","result")
     assert resp, "Successfully logged in"
 
     post_spell()
@@ -94,6 +94,6 @@ def test_registration_history_nonadmin():
     resp = login("admin", "Administrator@1", "12345678901", "success","result")
     assert resp, "Admin successfully logged in"
 
-    resp = get_history("admin22")
+    resp = get_history("admin32")
     client.get(address + "/logout")
     assert resp, "Correct number queries found for admin"
